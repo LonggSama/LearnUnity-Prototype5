@@ -10,7 +10,12 @@ public class GameManager : MonoBehaviour
     public List<GameObject> Targets;
 
     public TextMeshProUGUI ScoreText;
+    public TextMeshProUGUI LiveText;
+    public TextMeshProUGUI GameOverText;
 
+    public bool IsGameOver;
+
+    [SerializeField] private int _live;
     private int _score;
 
     private float _spawnRate = 1.0f;
@@ -33,11 +38,20 @@ public class GameManager : MonoBehaviour
         _score = 0;
         StartCoroutine(SpawnTarget());
         UpdateScore(0);
+        UpdateLive(0);
+    }
+
+    private void Update()
+    {
+        if (IsGameOver)
+        {
+            GameOverText.gameObject.SetActive(true);
+        }
     }
 
     IEnumerator SpawnTarget()
     {
-        while (true)
+        while (!IsGameOver)
         {
             yield return new WaitForSeconds(_spawnRate);
             int targetIndex = Random.Range(0, Targets.Count);
@@ -53,5 +67,16 @@ public class GameManager : MonoBehaviour
             _score = 0;
         }
         ScoreText.text = "Score: " + _score;
+    }
+
+    public void UpdateLive(int liveToAdd)
+    {
+        _live += liveToAdd;
+        if (_live < 1)
+        {
+            _live = 0;
+            IsGameOver = true;
+        }
+        LiveText.text = "Live: " + _live;
     }
 }

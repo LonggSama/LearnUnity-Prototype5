@@ -56,13 +56,18 @@ public class Target : MonoBehaviour
         Destroy(gameObject);
         Instantiate(ExplosionParticle, transform.position, ExplosionParticle.transform.rotation);
         GameManager.Instance.UpdateScore(_pointValue);
+        if (gameObject.CompareTag("Bad"))
+        {
+            GameManager.Instance.UpdateLive(-1);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Sensor"))
+        if (other.gameObject.CompareTag("Sensor") && !gameObject.CompareTag("Bad"))
         {
             Destroy(gameObject);
+            GameManager.Instance.UpdateLive(-1);
         }
     }
 
