@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
+    public int _pointValue;
+    public ParticleSystem ExplosionParticle;
+
     private int _minForce = 12;
     private int _maxForce = 16;
-
     private int _rangeTorque = 10;
-
     private float _rangeX = 4f;
-    private float _rangeY = -4f;
+    private float _rangeY = -3f;
 
     private Rigidbody _targetRb;
 
@@ -53,6 +54,8 @@ public class Target : MonoBehaviour
     private void OnMouseDown()
     {
         Destroy(gameObject);
+        Instantiate(ExplosionParticle, transform.position, ExplosionParticle.transform.rotation);
+        GameManager.Instance.UpdateScore(_pointValue);
     }
 
     private void OnTriggerEnter(Collider other)
