@@ -64,11 +64,11 @@ public class Target : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Sensor") && !gameObject.CompareTag("Bad"))
+        if (!gameObject.CompareTag("Bad"))
         {
-            Destroy(gameObject);
             GameManager.Instance.UpdateLive(-1);
         }
+        Destroy(gameObject);
     }
 
 }

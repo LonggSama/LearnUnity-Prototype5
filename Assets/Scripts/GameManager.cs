@@ -15,10 +15,14 @@ public class GameManager : MonoBehaviour
 
     public bool IsGameOver;
 
+    [SerializeField] private float _easyRate;
+    [SerializeField] private float _hardRate;
     [SerializeField] private int _live;
+
+    private float _timeUpdate = 1.5f;
     private int _score;
 
-    private float _spawnRate = 1.0f;
+    private int _spawnRate;
 
     private void Awake()
     {
@@ -53,11 +57,25 @@ public class GameManager : MonoBehaviour
     {
         while (!IsGameOver)
         {
-            yield return new WaitForSeconds(_spawnRate);
-            int targetIndex = Random.Range(0, Targets.Count);
-            Instantiate(Targets[targetIndex]);
+            TimeUpdate();
+            yield return new WaitForSeconds(_timeUpdate);
+            UpdateSpawnRate();
+            for (int i = 0; i < _spawnRate; i++)
+            {
+                int targetIndex = Random.Range(0, Targets.Count);
+                Instantiate(Targets[targetIndex]);
+            }
         }
     }
+
+    //void SpawnTarget()
+    //{
+    //    for (int i = 0; i < _spawnRate; i++)
+    //    {
+    //        int targetIndex = Random.Range(0, Targets.Count);
+    //        Instantiate(Targets[targetIndex]);
+    //    }
+    //}
 
     public void UpdateScore(int scoreToAdd)
     {
@@ -78,5 +96,39 @@ public class GameManager : MonoBehaviour
             IsGameOver = true;
         }
         LiveText.text = "Live: " + _live;
+    }
+
+    float UpdateSpawnRate()
+    {
+        if (Random.value <= _easyRate)
+        {
+            _spawnRate = 1;
+        }
+        if (Random.value > _easyRate && Random.value < _hardRate)
+        {
+            _spawnRate = 2;
+        }
+        if (Random.value >= _hardRate)
+        {
+            _spawnRate = 3;
+        }
+        return _spawnRate;
+    }
+
+    float TimeUpdate()
+    {
+        if (Random.value <= _easyRate)
+        {
+            _timeUpdate = 2f;
+        }
+        if (Random.value > _easyRate && Random.value < _hardRate)
+        {
+            _timeUpdate = 1.5f;
+        }
+        if (Random.value >= _hardRate)
+        {
+            _timeUpdate = 1f;
+        }
+        return _timeUpdate;
     }
 }

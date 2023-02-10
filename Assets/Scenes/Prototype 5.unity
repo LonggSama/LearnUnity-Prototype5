@@ -645,6 +645,8 @@ MonoBehaviour:
   LiveText: {fileID: 1021607077}
   GameOverText: {fileID: 347251895}
   IsGameOver: 0
+  _easyRate: 0.6
+  _hardRate: 0.9
   _live: 3
 --- !u!4 &648966812
 Transform:
