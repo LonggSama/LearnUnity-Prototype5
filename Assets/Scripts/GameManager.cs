@@ -2,60 +2,79 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private float _easyRate;
+
+    [SerializeField] private float _hardRate;
+
+    [SerializeField] private int _live;
+
+    [SerializeField] private Button _restartButton;
+
     public static GameManager Instance;
 
     public List<GameObject> Targets;
 
     public TextMeshProUGUI ScoreText;
+
     public TextMeshProUGUI LiveText;
+
     public TextMeshProUGUI GameOverText;
 
-    public bool IsGameOver;
-
-    [SerializeField] private float _easyRate;
-    [SerializeField] private float _hardRate;
-    [SerializeField] private int _live;
+    public bool IsGameActive;
 
     private float _timeUpdate = 1.5f;
+
     private int _score;
 
     private int _spawnRate;
 
+    private bool _firstWave;
+
     private void Awake()
     {
-        if (Instance != null)
-        {
-            Destroy(this);
-        }
-        else if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(this);
-        }
+        Instance = this;
     }
 
     private void Start()
     {
+        IsGameActive = true;
+
         _score = 0;
-        StartCoroutine(SpawnTarget());
+
+        StartCoroutine(FirstWave());
+
+        StartCoroutine(AfterFirstWave());
+
         UpdateScore(0);
+
         UpdateLive(0);
     }
 
-    private void Update()
+    IEnumerator FirstWave()
     {
-        if (IsGameOver)
+        if (IsGameActive)
         {
-            GameOverText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(0.5f);
+            int targetIndex = Random.Range(0, Targets.Count);
+            Instantiate(Targets[targetIndex]);
+            _firstWave = true;
         }
+    }
+
+    IEnumerator AfterFirstWave()
+    {
+        yield return new WaitUntil(() => _firstWave);
+        StartCoroutine(SpawnTarget());
     }
 
     IEnumerator SpawnTarget()
     {
-        while (!IsGameOver)
+        while (IsGameActive)
         {
             TimeUpdate();
             yield return new WaitForSeconds(_timeUpdate);
@@ -79,12 +98,15 @@ public class GameManager : MonoBehaviour
 
     public void UpdateScore(int scoreToAdd)
     {
-        _score += scoreToAdd;
-        if (_score < 0)
+        if (IsGameActive)
         {
-            _score = 0;
+            _score += scoreToAdd;
+            if (_score < 0)
+            {
+                _score = 0;
+            }
+            ScoreText.text = "Score: " + _score;
         }
-        ScoreText.text = "Score: " + _score;
     }
 
     public void UpdateLive(int liveToAdd)
@@ -93,7 +115,7 @@ public class GameManager : MonoBehaviour
         if (_live < 1)
         {
             _live = 0;
-            IsGameOver = true;
+            GameOver();
         }
         LiveText.text = "Live: " + _live;
     }
@@ -130,5 +152,17 @@ public class GameManager : MonoBehaviour
             _timeUpdate = 1f;
         }
         return _timeUpdate;
+    }
+
+    void GameOver()
+    {
+        IsGameActive = false;
+        GameOverText.gameObject.SetActive(true);
+        _restartButton.gameObject.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
