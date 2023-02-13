@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Button _restartButton;
 
+    [SerializeField] private GameObject _titleScreen;
+
     public static GameManager Instance;
 
     public List<GameObject> Targets;
@@ -27,13 +29,15 @@ public class GameManager : MonoBehaviour
 
     public bool IsGameActive;
 
-    private float _timeUpdate = 1.5f;
+    private float _timeUpdate;
+
+    private float _difficulty;
 
     private int _score;
 
     private int _spawnRate;
 
-    private bool _firstWave;
+    public bool _firstWave = false;
 
     private void Awake()
     {
@@ -42,28 +46,20 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        IsGameActive = true;
-
-        _score = 0;
-
         StartCoroutine(FirstWave());
 
         StartCoroutine(AfterFirstWave());
-
-        UpdateScore(0);
-
-        UpdateLive(0);
     }
 
     IEnumerator FirstWave()
     {
-        if (IsGameActive)
-        {
-            yield return new WaitForSeconds(0.5f);
-            int targetIndex = Random.Range(0, Targets.Count);
-            Instantiate(Targets[targetIndex]);
-            _firstWave = true;
-        }
+        yield return new WaitUntil(() => IsGameActive);
+
+        int targetIndex = Random.Range(0, Targets.Count);
+
+        Instantiate(Targets[targetIndex]);
+
+        _firstWave = true;
     }
 
     IEnumerator AfterFirstWave()
@@ -77,11 +73,15 @@ public class GameManager : MonoBehaviour
         while (IsGameActive)
         {
             TimeUpdate();
-            yield return new WaitForSeconds(_timeUpdate);
+
+            yield return new WaitForSeconds(_timeUpdate/_difficulty);
+
             UpdateSpawnRate();
+
             for (int i = 0; i < _spawnRate; i++)
             {
                 int targetIndex = Random.Range(0, Targets.Count);
+
                 Instantiate(Targets[targetIndex]);
             }
         }
@@ -101,10 +101,12 @@ public class GameManager : MonoBehaviour
         if (IsGameActive)
         {
             _score += scoreToAdd;
+
             if (_score < 0)
             {
                 _score = 0;
             }
+
             ScoreText.text = "Score: " + _score;
         }
     }
@@ -112,11 +114,14 @@ public class GameManager : MonoBehaviour
     public void UpdateLive(int liveToAdd)
     {
         _live += liveToAdd;
+
         if (_live < 1)
         {
             _live = 0;
+
             GameOver();
         }
+
         LiveText.text = "Live: " + _live;
     }
 
@@ -151,18 +156,36 @@ public class GameManager : MonoBehaviour
         {
             _timeUpdate = 1f;
         }
+
         return _timeUpdate;
     }
 
     void GameOver()
     {
         IsGameActive = false;
+
         GameOverText.gameObject.SetActive(true);
+
         _restartButton.gameObject.SetActive(true);
     }
 
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void StartGame(int difficulty)
+    {
+        IsGameActive = true;
+
+        _score = 0;
+
+        _difficulty = difficulty;
+
+        UpdateScore(0);
+
+        UpdateLive(0);
+
+        _titleScreen.gameObject.SetActive(false);
     }
 }
