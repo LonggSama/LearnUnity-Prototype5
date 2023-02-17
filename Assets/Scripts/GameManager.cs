@@ -19,6 +19,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject _volumeSlide;
 
+    [SerializeField] private GameObject _pauseText;
+
+    [SerializeField] private GameObject _pauseScreen;
+
     public static GameManager Instance;
 
     public List<GameObject> Targets;
@@ -39,6 +43,8 @@ public class GameManager : MonoBehaviour
 
     private int _spawnRate;
 
+    private bool _isPaused;
+
     public bool _firstWave = false;
 
     private void Awake()
@@ -53,6 +59,10 @@ public class GameManager : MonoBehaviour
         StartCoroutine(AfterFirstWave());
     }
 
+    private void Update()
+    {
+        PauseGame();
+    }
     IEnumerator FirstWave()
     {
         yield return new WaitUntil(() => IsGameActive);
@@ -191,5 +201,33 @@ public class GameManager : MonoBehaviour
         _titleScreen.gameObject.SetActive(false);
 
         _volumeSlide.gameObject.SetActive(false);
+    }
+
+    public void PauseGame()
+    {
+        if (IsGameActive)
+        {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                _isPaused = !_isPaused;
+
+                if (_isPaused)
+                {
+                    Time.timeScale = 0;
+
+                    _pauseScreen.SetActive(true);
+
+                    _pauseText.SetActive(true);
+                }
+                else
+                {
+                    Time.timeScale = 1;
+
+                    _pauseScreen.SetActive(false);
+
+                    _pauseText.SetActive(false);
+                }
+            }
+        }
     }
 }
