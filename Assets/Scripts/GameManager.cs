@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject _titleScreen;
 
+    [SerializeField] private GameObject _volumeSlide;
+
     public static GameManager Instance;
 
     public List<GameObject> Targets;
@@ -122,7 +124,7 @@ public class GameManager : MonoBehaviour
             GameOver();
         }
 
-        LiveText.text = "Live: " + _live;
+        LiveText.text = "Lives: " + _live;
     }
 
     float UpdateSpawnRate()
@@ -187,5 +189,7 @@ public class GameManager : MonoBehaviour
         UpdateLive(0);
 
         _titleScreen.gameObject.SetActive(false);
+
+        _volumeSlide.gameObject.SetActive(false);
     }
 }

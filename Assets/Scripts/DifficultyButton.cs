@@ -7,7 +7,11 @@ public class DifficultyButton : MonoBehaviour
 {
     [SerializeField] int _difficulty;
 
+    [SerializeField] private AudioClip _clip;
+
     private Button _button;
+
+    private bool _clickButton;
 
     // Start is called before the first frame update
     void Awake()
@@ -23,8 +27,16 @@ public class DifficultyButton : MonoBehaviour
 
     void SetDifficulty()
     {
-        Debug.Log(_button.gameObject.name + " was clicked!");
+        if (!_clickButton)
+        {
+            Debug.Log(_button.gameObject.name + " was clicked!");
 
-        GameManager.Instance.StartGame(_difficulty);
+            GameManager.Instance.StartGame(_difficulty);
+
+            SoundManager.Instance.PlaySound(_clip);
+
+            _clickButton = true;
+        }
+        
     }
 }
