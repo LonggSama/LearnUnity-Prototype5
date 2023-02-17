@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
+    [SerializeField] private AudioClip _clickSound;
+
+    [SerializeField] private AudioClip _dropSound;
+
     public int _pointValue;
     public ParticleSystem ExplosionParticle;
 
@@ -62,6 +66,7 @@ public class Target : MonoBehaviour
             {
                 GameManager.Instance.UpdateLive(-1);
             }
+            SoundManager.Instance.PlaySound(_clickSound);
         }
     }
 
@@ -70,6 +75,10 @@ public class Target : MonoBehaviour
         if (!gameObject.CompareTag("Bad"))
         {
             GameManager.Instance.UpdateLive(-1);
+            if (GameManager.Instance.IsGameActive)
+            {
+                SoundManager.Instance.PlaySound(_dropSound);
+            }
         }
         Destroy(gameObject);
     }

@@ -763,6 +763,7 @@ GameObject:
   - component: {fileID: 296917829}
   - component: {fileID: 296917828}
   - component: {fileID: 296917827}
+  - component: {fileID: 296917830}
   m_Layer: 5
   m_Name: Restart Button
   m_TagString: Untagged
@@ -885,6 +886,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 296917825}
   m_CullTransparentMesh: 1
+--- !u!114 &296917830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 296917825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39087bfd1b0cd7241bf64ce45981698b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _clip: {fileID: 8300000, guid: c053c3d2a711144dcb83ba80730f20a6, type: 3}
 --- !u!1 &347251893
 GameObject:
   m_ObjectHideFlags: 0
@@ -1947,7 +1961,7 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 0.23
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2660,9 +2674,9 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: aac0a360368e94c72808af3c16befc8e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
-  Loop: 0
+  Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
