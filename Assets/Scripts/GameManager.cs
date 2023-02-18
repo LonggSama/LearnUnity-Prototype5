@@ -17,11 +17,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject _titleScreen;
 
-    [SerializeField] private GameObject _volumeSlide;
-
     [SerializeField] private GameObject _pauseText;
 
-    [SerializeField] private GameObject _pauseScreen;
+    [SerializeField] private GameObject _pausePanel;
+
+    [SerializeField] private GameObject _blade;
 
     public static GameManager Instance;
 
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
 
     private int _spawnRate;
 
-    private bool _isPaused;
+    public bool IsPaused;
 
     public bool _firstWave = false;
 
@@ -199,8 +199,6 @@ public class GameManager : MonoBehaviour
         UpdateLive(0);
 
         _titleScreen.gameObject.SetActive(false);
-
-        _volumeSlide.gameObject.SetActive(false);
     }
 
     public void PauseGame()
@@ -209,13 +207,13 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                _isPaused = !_isPaused;
+                IsPaused = !IsPaused;
 
-                if (_isPaused)
+                if (IsPaused)
                 {
                     Time.timeScale = 0;
 
-                    _pauseScreen.SetActive(true);
+                    _pausePanel.SetActive(true);
 
                     _pauseText.SetActive(true);
                 }
@@ -223,7 +221,7 @@ public class GameManager : MonoBehaviour
                 {
                     Time.timeScale = 1;
 
-                    _pauseScreen.SetActive(false);
+                    _pausePanel.SetActive(false);
 
                     _pauseText.SetActive(false);
                 }
